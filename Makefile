@@ -1,4 +1,4 @@
-# $Id: Makefile,v 1.5 2003/08/21 15:03:51 erik Exp $
+# $Id: Makefile,v 1.6 2003/10/08 12:57:22 erik Exp $
 
 STATE=agent.state
 
@@ -6,7 +6,7 @@ all: agent
 
 install: agent
 	> /usr/lib/cgi-bin/${STATE}
-	rm -f /tmp/agent.unknown
+	> /tmp/agent.unknown
 	strip agent && cat agent > /usr/lib/cgi-bin/agent
 
 default: agent
