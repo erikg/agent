@@ -1,5 +1,5 @@
 /*
- * $Id: agent.c,v 1.10 2003/08/21 14:03:20 erik Exp $
+ * $Id: agent.c,v 1.11 2003/08/21 14:04:05 erik Exp $
  */
 
 #include <stdio.h>
@@ -58,7 +58,7 @@ int
 main (int argc, char **argv)
 {
   int i = 0, total = 0, statefile;
-  long offset = 0, nixcount=0;
+  long offset = 0, nixcount = 0;
   FILE *logfile;
   char buf[BUFSIZ];
   regmatch_t pmatch[1000];
@@ -88,7 +88,7 @@ main (int argc, char **argv)
   statefile = open (STATE, O_RDWR);
   if (statefile != -1)
     {
-	    flock(statefile,LOCK_EX);
+      flock (statefile, LOCK_EX);
       read (statefile, &offset, sizeof (long));
       read (statefile, &total, sizeof (long));
       i = 0;
@@ -128,7 +128,7 @@ main (int argc, char **argv)
       write (statefile, &table[i].count, sizeof (int));
       ++i;
     }
-  flock(statefile,LOCK_UN);
+  flock (statefile, LOCK_UN);
   close (statefile);
 
   nixcount = table[0].count + table[1].count + table[2].count;
@@ -146,8 +146,10 @@ main (int argc, char **argv)
       ++i;
     }
   printf ("<TR><TD><HR></TD><TD><HR></TD><TD><HR></TD></TR>\n");
-  printf ("<TR><TD>*nix</TD><TD>%ld</TD><TD>(% .2f %%)</TD></TR>\n",nixcount, 100.0*nixcount/(float)total);
-  printf ("<TR><TD>Total</TD><TD>%d</TD><TD>(% .2f %%)</TD></TR>\n",total, 100.0*total/(float)total);
+  printf ("<TR><TD>*nix</TD><TD>%ld</TD><TD>(% .2f %%)</TD></TR>\n", nixcount,
+	  100.0 * nixcount / (float) total);
+  printf ("<TR><TD>Total</TD><TD>%d</TD><TD>(% .2f %%)</TD></TR>\n", total,
+	  100.0 * total / (float) total);
   printf ("</TABLE>\n");
 
 #ifndef CLEAN
@@ -172,8 +174,10 @@ main (int argc, char **argv)
       ++i;
     }
   printf ("<TR><TD><HR></TD><TD><HR></TD><TD><HR></TD></TR>\n");
-  printf ("<TR><TD>*nix</TD><TD>%ld</TD><TD>(% .2f %%)</TD></TR>\n",nixcount, 100.0*nixcount/(float)total);
-  printf ("<TR><TD>Total</TD><TD>%d</TD><TD>(% .2f %%)</TD></TR>\n",total, 100.0*total/(float)total);
+  printf ("<TR><TD>*nix</TD><TD>%ld</TD><TD>(% .2f %%)</TD></TR>\n", nixcount,
+	  100.0 * nixcount / (float) total);
+  printf ("<TR><TD>Total</TD><TD>%d</TD><TD>(% .2f %%)</TD></TR>\n", total,
+	  100.0 * total / (float) total);
   printf ("</TABLE>\n");
 #endif
 
