@@ -1,6 +1,6 @@
 
 /*
- * $Id: agent.c,v 1.18 2003/08/21 17:38:55 erik Exp $
+ * $Id: agent.c,v 1.19 2003/10/08 12:52:27 erik Exp $
  */
 
 #include <stdio.h>
@@ -33,13 +33,14 @@ struct os
 
 struct os table[] = {
     {0, 1, "BSD", "bsd|fetch", 0},
-    {0, 1, "Linux", "gnome|konq|linux|webdownloader", 0},
-    {0, 1, "Unix",
-     "aix|contype|java|lwp::|lynx|osix|perl|solaris|sunos|unix|wget|x11", 0},
+    {0, 1, "Linux", "linux|webdownloader", 0},
     {0, 1, "Mac", "mac|apple", 0},
-    {0, 1, "PDA", "gulliver", 0},
+    {0, 1, "Unix",
+     "gnome|konq|aix|contype|dillo|java|lwp::|lynx|osix|perl|solaris|sunos|unix|wget|x11",
+     0},
+    {0, 1, "PDA", "gulliver|jBrowser", 0},
     {0, 0, "Bot (spider)",
-     "aport|appie|arach|archiver|assort|asterias|augurfind|bot|bumblebee|crawl|docomo|efp@gmx\\.net|googlebot|griffon|harvest|hubater|indy library|infoseek|inktomi|intelliseek|internetseer|jack\n$|jeeves|lachesis|larbin|letscape|mail ?sweeper|marvin|mercator|moget|mozilla/3.0[1]? \\(compatible[;]?\\)|mozilla/5\\.0\n$|muscat|netcraft|offline explorer|pita|pompos|quepasacreep|scooter|search|slurp|spider|spyder|teleport pro|teoma|titan|validator|walker|webcollage|webcopier|webfountain|webreaper|webseek|webstripper|wfarc|zao|zeus|zyborg",
+     "aport|appie|arach|archiver|assort|asterias|augurfind|bot|bumblebee|crawl|docomo|efp@gmx\\.net|googlebot|griffon|harvest|hubater|indy library|infoseek|inktomi|intelliseek|internetseer|jack\n$|jeeves|lachesis|larbin|letscape|mail ?sweeper|marvin|mercator|moget|mozilla/3.0[1]? \\(compatible[;]?\\)|mozilla/5\\.0\n$|muscat|netcraft|ng/1.0|offline explorer|php|pita|pompos|quepasacreep|scooter|search|slurp|spider|spyder|teleport pro|teoma|titan|validator|walker|webcollage|webcopier|webfountain|webreaper|webseek|webstripper|wfarc|zao|zeus|zyborg",
      0},
     {0, 0, "WinWorm", "^-\n$", 0},	/* erm, why is \n needed? */
     {0, 0, "bad guy tool", "simpsons cgi scanner|bordermanager", 0},
@@ -141,7 +142,8 @@ main (int argc, char **argv)
     flock (statefile, LOCK_UN);
     close (statefile);
 
-    nixcount = table[0].count + table[1].count + table[2].count + table[3].count;
+    nixcount =
+	table[0].count + table[1].count + table[2].count + table[3].count;
 
     qsort (table, 9, sizeof (struct os), countcmp);
 
