@@ -1,6 +1,6 @@
 
 /*
- * $Id: agent.c,v 1.19 2003/10/08 12:52:27 erik Exp $
+ * $Id: agent.c,v 1.20 2003/10/08 12:54:18 erik Exp $
  */
 
 #include <stdio.h>
@@ -21,6 +21,9 @@
 #endif
 
 #define STATE "agent.state"
+
+const char rcsid[] = 
+ "$Id: agent.c,v 1.20 2003/10/08 12:54:18 erik Exp $";
 
 struct os
 {
@@ -195,7 +198,7 @@ main (int argc, char **argv)
 #endif
 
 
-    printf ("</CENTER></BODY></HTML>\n");
+    printf ("<BR><BR><FONT SIZE=-2><EM>%s</EM></FONT></CENTER></BODY></HTML>\n",rcsid);
 
     exit (EXIT_SUCCESS);
 }
