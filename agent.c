@@ -10,7 +10,7 @@
 #define LOG "/var/log/apache/agent.log"
 #endif
 
-#define STATE "agent.state"
+#define STATE "agent.test.state"
 
 struct os
 {
@@ -24,7 +24,7 @@ struct os table[] = {
   {0, "BSD", "bsd|fetch", 0},
   {0, "Linux", "linux|konq|gnome", 0},
   {0, "*nix", "X11|Lynx|sunos|aix|perl|wget|contype", 0},
-  {0, "All *nix", "fjdkaslvjhsaljdvklsavjds", 0},
+//  {0, "All *nix", "fjdkaslvjhsaljdvklsavjds", 0},
   {0, "Mac", "mac", 0},
   {0, "PDA", "gulliver", 0},
   {0, "Windows", "win|msie|frontpage|microsoft|aol|gozilla", 0},
@@ -35,6 +35,14 @@ struct os table[] = {
   {0, "Other", ".*", 0},
   {0, NULL, NULL, 0}
 };
+
+int countcmp(const void *_a, const void *_b)
+{
+	struct os *a, *b;
+	a = (struct os*)_a;
+	b = (struct os*)_b;
+	return -(a->count-b->count);
+}
 
 int
 main (int argc, char **argv)
@@ -108,10 +116,12 @@ main (int argc, char **argv)
     }
   fclose (fd[1]);
 
-  table[3].count = table[0].count + table[1].count + table[2].count;
+/*  table[3].count = table[0].count + table[1].count + table[2].count;*/
+
+  qsort(table,8,sizeof(struct os),countcmp);
 
   i = 0;
-  printf ("<TABLE><TR><TH>OS</TH><TH>Count</TH><TH>Percent</TH></TR>\n");
+  printf ("<TABLE CELLSPACING=0 CELLPADDING=0><TR><TH>OS</TH><TH>Count</TH><TH>Percent</TH></TR>\n");
   while (table[i].name)
     {
       printf ("<TR><TD>%s</TD><TD>%d</TD><TD>(% .2f %%)</TD></TR>\n",
