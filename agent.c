@@ -1,6 +1,6 @@
 
 /*
- * $Id: agent.c,v 1.16 2003/08/21 17:30:40 erik Exp $
+ * $Id: agent.c,v 1.17 2003/08/21 17:33:08 erik Exp $
  */
 
 #include <stdio.h>
@@ -34,17 +34,18 @@ struct os
 struct os table[] = {
     {0, 1, "BSD", "bsd|fetch", 0},
     {0, 1, "Linux", "gnome|konq|linux|webdownloader", 0},
-    {0, 1, "Unix", "aix|contype|java|lwp::|lynx|osix|perl|solaris|sunos|unix|wget|x11", 0},
+    {0, 1, "Unix",
+     "aix|contype|java|lwp::|lynx|osix|perl|solaris|sunos|unix|wget|x11", 0},
     {0, 1, "Mac", "mac|apple", 0},
     {0, 1, "PDA", "gulliver", 0},
     {0, 0, "Bot (spider)",
      "aport|appie|arach|archiver|assort|asterias|augurfind|bot|bumblebee|crawl|docomo|efp@gmx\\.net|googlebot|griffon|harvest|hubater|indy library|infoseek|inktomi|intelliseek|internetseer|jack\n$|jeeves|lachesis|larbin|letscape|mail ?sweeper|marvin|mercator|moget|mozilla/3.0[1]? \\(compatible[;]?\\)|mozilla/5\\.0\n$|muscat|netcraft|offline explorer|pita|pompos|quepasacreep|scooter|search|slurp|spider|spyder|teleport pro|teoma|titan|validator|walker|webcollage|webcopier|webfountain|webreaper|webseek|webstripper|wfarc|zao|zeus|zyborg",
-	 0},
-	{0, 0, "WinWorm", "^-\n$", 0},	/* erm, why is \n needed? */
-	{0, 0, "bad guy tool", "simpsons cgi scanner|bordermanager", 0},
-	{0, 1, "Windows", "win|msie|frontpage|microsoft|aol|gozilla", 0},
-	{0, 0, "Other", ".*", 0},
-	{0, 0, NULL, NULL, 0}
+     0},
+    {0, 0, "WinWorm", "^-\n$", 0},	/* erm, why is \n needed? */
+    {0, 0, "bad guy tool", "simpsons cgi scanner|bordermanager", 0},
+    {0, 1, "Windows", "win|msie|frontpage|microsoft|aol|gozilla", 0},
+    {0, 0, "Other", ".*", 0},
+    {0, 0, NULL, NULL, 0}
 };
 
 int
@@ -149,9 +150,10 @@ main (int argc, char **argv)
 	("<TABLE CELLSPACING=0 CELLPADDING=0><TR><TH>OS</TH><TH>Count</TH><TH>Percent</TH></TR>\n");
     while (table[i].name)
       {
-	  printf ("<TR><TD>%s</TD><TD>%d</TD><TD>(% .2f %%)</TD></TR>\n",
-		  table[i].name, table[i].count,
-		  100.0 * (float) table[i].count / (float) total);
+	  if (table[i].count)
+	      printf ("<TR><TD>%s</TD><TD>%d</TD><TD>(% .2f %%)</TD></TR>\n",
+		      table[i].name, table[i].count,
+		      100.0 * (float) table[i].count / (float) total);
 	  ++i;
       }
     printf ("<TR><TD><HR></TD><TD><HR></TD><TD><HR></TD></TR>\n");
@@ -176,7 +178,7 @@ main (int argc, char **argv)
 	("<TABLE CELLSPACING=0 CELLPADDING=0><TR><TH>OS</TH><TH>Count</TH><TH>Percent</TH></TR>\n");
     while (table[i].name)
       {
-	  if (table[i].mortal)
+	  if (table[i].mortal && table[i].count)
 	      printf ("<TR><TD>%s</TD><TD>%d</TD><TD>(% .2f %%)</TD></TR>\n",
 		      table[i].name, table[i].count,
 		      100.0 * (float) table[i].count / (float) total);
