@@ -10,7 +10,7 @@
 #define LOG "/var/log/apache/agent.log"
 #endif
 
-#define STATE "agent.test.state"
+#define STATE "agent.state"
 
 struct os
 {
