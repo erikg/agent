@@ -1,5 +1,5 @@
 /*
- * $Id: agent.c,v 1.9 2003/08/21 13:51:28 erik Exp $
+ * $Id: agent.c,v 1.10 2003/08/21 14:03:20 erik Exp $
  */
 
 #include <stdio.h>
@@ -36,11 +36,11 @@ struct os table[] = {
   {0, 1, "Unix", "X11|Lynx|sunos|aix|perl|wget|contype", 0},
   {0, 1, "Mac", "mac", 0},
   {0, 1, "PDA", "gulliver", 0},
-  {0, 1, "Windows", "win|msie|frontpage|microsoft|aol|gozilla", 0},
   {0, 0, "Bot (spider)",
    "bot|spider|arach|crawl|harvest|slurp|griffon|walker|scooter|archiver|asterias|search|spyder|hubater|letscape|titan|googlebot|inktomi|zyborg|ZyBorg|Mozilla/3.01 (compatible;)",
    0},
   {0, 0, "WinWorm", "^-\n$", 0},	/* erm, why is \n needed? */
+  {0, 1, "Windows", "win|msie|frontpage|microsoft|aol|gozilla", 0},
   {0, 1, "Other", ".*", 0},
   {0, 0, NULL, NULL, 0}
 };
@@ -58,7 +58,7 @@ int
 main (int argc, char **argv)
 {
   int i = 0, total = 0, statefile;
-  long offset = 0;
+  long offset = 0, nixcount=0;
   FILE *logfile;
   char buf[BUFSIZ];
   regmatch_t pmatch[1000];
@@ -131,7 +131,7 @@ main (int argc, char **argv)
   flock(statefile,LOCK_UN);
   close (statefile);
 
-/*  table[3].count = table[0].count + table[1].count + table[2].count;*/
+  nixcount = table[0].count + table[1].count + table[2].count;
 
   qsort (table, 8, sizeof (struct os), countcmp);
 
@@ -145,6 +145,9 @@ main (int argc, char **argv)
 	      100.0 * (float) table[i].count / (float) total);
       ++i;
     }
+  printf ("<TR><TD><HR></TD><TD><HR></TD><TD><HR></TD></TR>\n");
+  printf ("<TR><TD>*nix</TD><TD>%ld</TD><TD>(% .2f %%)</TD></TR>\n",nixcount, 100.0*nixcount/(float)total);
+  printf ("<TR><TD>Total</TD><TD>%d</TD><TD>(% .2f %%)</TD></TR>\n",total, 100.0*total/(float)total);
   printf ("</TABLE>\n");
 
 #ifndef CLEAN
@@ -168,6 +171,9 @@ main (int argc, char **argv)
 		100.0 * (float) table[i].count / (float) total);
       ++i;
     }
+  printf ("<TR><TD><HR></TD><TD><HR></TD><TD><HR></TD></TR>\n");
+  printf ("<TR><TD>*nix</TD><TD>%ld</TD><TD>(% .2f %%)</TD></TR>\n",nixcount, 100.0*nixcount/(float)total);
+  printf ("<TR><TD>Total</TD><TD>%d</TD><TD>(% .2f %%)</TD></TR>\n",total, 100.0*total/(float)total);
   printf ("</TABLE>\n");
 #endif
 
