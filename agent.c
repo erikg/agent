@@ -1,5 +1,5 @@
 /*
- * $Id: agent.c,v 1.11 2003/08/21 14:04:05 erik Exp $
+ * $Id: agent.c,v 1.12 2003/08/21 14:35:50 erik Exp $
  */
 
 #include <stdio.h>
@@ -57,8 +57,8 @@ countcmp (const void *_a, const void *_b)
 int
 main (int argc, char **argv)
 {
-  int i = 0, total = 0, statefile;
-  long offset = 0, nixcount = 0;
+  int i = 0, total = 0, nixcount = 0, statefile, otherlog;
+  unsigned long offset = 0;
   FILE *logfile;
   char buf[BUFSIZ];
   regmatch_t pmatch[1000];
@@ -100,7 +100,9 @@ main (int argc, char **argv)
       lseek (statefile, 0, SEEK_SET);
     }
   else
-    statefile = open (STATE, O_WRONLY | O_CREAT);
+    statefile = open (STATE, O_WRONLY | O_CREAT, 0660);
+
+  otherlog = open ("/tmp/agent.unknown", O_WRONLY | O_CREAT, 0664);
 
   fseek (logfile, offset, SEEK_SET);
 
@@ -112,12 +114,15 @@ main (int argc, char **argv)
 	  if (regexec (table[i].preg, buf, strlen (buf), pmatch, 0) == 0)
 	    {
 	      table[i].count++;
+	      if (i == 8 || !strncmp (table[i].name, "Other", 5))
+		write (otherlog, buf, strlen (buf));
 	      break;
 	    }
 	  ++i;
 	}
       ++total;
     }
+  close (otherlog);
   offset = ftell (logfile);
   fclose (logfile);
   write (statefile, &offset, sizeof (long));
@@ -146,7 +151,7 @@ main (int argc, char **argv)
       ++i;
     }
   printf ("<TR><TD><HR></TD><TD><HR></TD><TD><HR></TD></TR>\n");
-  printf ("<TR><TD>*nix</TD><TD>%ld</TD><TD>(% .2f %%)</TD></TR>\n", nixcount,
+  printf ("<TR><TD>*nix</TD><TD>%d</TD><TD>(% .2f %%)</TD></TR>\n", nixcount,
 	  100.0 * nixcount / (float) total);
   printf ("<TR><TD>Total</TD><TD>%d</TD><TD>(% .2f %%)</TD></TR>\n", total,
 	  100.0 * total / (float) total);
@@ -174,7 +179,7 @@ main (int argc, char **argv)
       ++i;
     }
   printf ("<TR><TD><HR></TD><TD><HR></TD><TD><HR></TD></TR>\n");
-  printf ("<TR><TD>*nix</TD><TD>%ld</TD><TD>(% .2f %%)</TD></TR>\n", nixcount,
+  printf ("<TR><TD>*nix</TD><TD>%d</TD><TD>(% .2f %%)</TD></TR>\n", nixcount,
 	  100.0 * nixcount / (float) total);
   printf ("<TR><TD>Total</TD><TD>%d</TD><TD>(% .2f %%)</TD></TR>\n", total,
 	  100.0 * total / (float) total);
