@@ -29,7 +29,7 @@ struct os table[] = {
   {0, 1, "PDA", "gulliver", 0},
   {0, 1, "Windows", "win|msie|frontpage|microsoft|aol|gozilla", 0},
   {0, 0, "Bot (spider)",
-   "bot|spider|arach|crawl|harvest|slurp|griffon|walker|scooter|archiver|asterias|search|spyder|hubater|letscape|titan|Mozilla/3.01 (compatible;)",
+   "bot|spider|arach|crawl|harvest|slurp|griffon|walker|scooter|archiver|asterias|search|spyder|hubater|letscape|titan|googlebot|inktomi|zyborg|ZyBorg|Mozilla/3.01 (compatible;)",
    0},
   {0, 0, "WinWorm", "^-\n$", 0},	/* erm, why is \n needed? */
   {0, 1, "Other", ".*", 0},
