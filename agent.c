@@ -1,3 +1,7 @@
+/*
+ * $Id: agent.c,v 1.9 2003/08/21 13:51:28 erik Exp $
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -5,6 +9,7 @@
 #include <sys/types.h>
 #include <regex.h>
 #include <sys/stat.h>
+#include <sys/file.h>
 #include <fcntl.h>
 
 
@@ -28,7 +33,7 @@ struct os
 struct os table[] = {
   {0, 1, "BSD", "bsd|fetch", 0},
   {0, 1, "Linux", "linux|konq|gnome", 0},
-  {0, 1, "*nix", "X11|Lynx|sunos|aix|perl|wget|contype", 0},
+  {0, 1, "Unix", "X11|Lynx|sunos|aix|perl|wget|contype", 0},
   {0, 1, "Mac", "mac", 0},
   {0, 1, "PDA", "gulliver", 0},
   {0, 1, "Windows", "win|msie|frontpage|microsoft|aol|gozilla", 0},
@@ -52,9 +57,9 @@ countcmp (const void *_a, const void *_b)
 int
 main (int argc, char **argv)
 {
-  int i = 0, total = 0, fd;
+  int i = 0, total = 0, statefile;
   long offset = 0;
-  FILE *fp;
+  FILE *logfile;
   char buf[BUFSIZ];
   regmatch_t pmatch[1000];
 
@@ -71,8 +76,8 @@ main (int argc, char **argv)
       i++;
     }
 
-  fp = fopen (LOG, "r");
-  if (fp == NULL)
+  logfile = fopen (LOG, "r");
+  if (logfile == NULL)
     {
       printf ("Unable to open log file (%s)\n", LOG);
       perror ("agent: ");
@@ -80,25 +85,26 @@ main (int argc, char **argv)
     }
 
   /* perhaps we should stat and do better reporting? */
-  fd = open (STATE, O_RDWR);
-  if (fd != -1)
+  statefile = open (STATE, O_RDWR);
+  if (statefile != -1)
     {
-      read (fd, &offset, sizeof (long));
-      read (fd, &total, sizeof (long));
+	    flock(statefile,LOCK_EX);
+      read (statefile, &offset, sizeof (long));
+      read (statefile, &total, sizeof (long));
       i = 0;
       while (table[i].name)
 	{
-	  read (fd, &table[i].count, sizeof (int));
+	  read (statefile, &table[i].count, sizeof (int));
 	  ++i;
 	}
-      lseek (fd, 0, SEEK_SET);
+      lseek (statefile, 0, SEEK_SET);
     }
   else
-    fd = open (STATE, O_WRONLY|O_CREAT);
+    statefile = open (STATE, O_WRONLY | O_CREAT);
 
-  fseek (fp, offset, SEEK_SET);
+  fseek (logfile, offset, SEEK_SET);
 
-  while (fgets (buf, 1024, fp))
+  while (fgets (buf, 1024, logfile))
     {
       i = 0;
       while (table[i].regex)
@@ -112,17 +118,18 @@ main (int argc, char **argv)
 	}
       ++total;
     }
-  offset = ftell (fp);
-  fclose (fp);
-  write (fd, &offset, sizeof (long));
-  write (fd, &total, sizeof (int));
+  offset = ftell (logfile);
+  fclose (logfile);
+  write (statefile, &offset, sizeof (long));
+  write (statefile, &total, sizeof (int));
   i = 0;
   while (table[i].name)
     {
-      write (fd, &table[i].count, sizeof (int));
+      write (statefile, &table[i].count, sizeof (int));
       ++i;
     }
-  close (fd);
+  flock(statefile,LOCK_UN);
+  close (statefile);
 
 /*  table[3].count = table[0].count + table[1].count + table[2].count;*/
 
