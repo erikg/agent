@@ -1,6 +1,6 @@
 
 /*
- * $Id: agent.c,v 1.17 2003/08/21 17:33:08 erik Exp $
+ * $Id: agent.c,v 1.18 2003/08/21 17:38:55 erik Exp $
  */
 
 #include <stdio.h>
@@ -141,7 +141,7 @@ main (int argc, char **argv)
     flock (statefile, LOCK_UN);
     close (statefile);
 
-    nixcount = table[0].count + table[1].count + table[2].count;
+    nixcount = table[0].count + table[1].count + table[2].count + table[3].count;
 
     qsort (table, 9, sizeof (struct os), countcmp);
 
