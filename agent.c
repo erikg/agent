@@ -15,25 +15,23 @@
 struct os
 {
   int count;
+	int mortal;
   char *name;
   char *regex;
   regex_t *preg;
 };
 
 struct os table[] = {
-  {0, "BSD", "bsd|fetch", 0},
-  {0, "Linux", "linux|konq|gnome", 0},
-  {0, "*nix", "X11|Lynx|sunos|aix|perl|wget|contype", 0},
-//  {0, "All *nix", "fjdkaslvjhsaljdvklsavjds", 0},
-  {0, "Mac", "mac", 0},
-  {0, "PDA", "gulliver", 0},
-  {0, "Windows", "win|msie|frontpage|microsoft|aol|gozilla", 0},
-  {0, "Bot (spider)",
-   "bot|spider|arach|crawl|harvest|slurp|griffon|walker|scooter|archiver|asterias|search|spyder|hubater|letscape|titan|Mozilla/3.01 (compatible;)",
-   0},
-  {0, "WinWorm", "^-\n$", 0},	/* erm, why is \n needed? */
-  {0, "Other", ".*", 0},
-  {0, NULL, NULL, 0}
+  {0, 1, "BSD", "bsd|fetch", 0},
+  {0, 1, "Linux", "linux|konq|gnome", 0},
+  {0, 1, "*nix", "X11|Lynx|sunos|aix|perl|wget|contype", 0},
+  {0, 1, "Mac", "mac", 0},
+  {0, 1, "PDA", "gulliver", 0},
+  {0, 1, "Windows", "win|msie|frontpage|microsoft|aol|gozilla", 0},
+  {0, 0, "Bot (spider)", "bot|spider|arach|crawl|harvest|slurp|griffon|walker|scooter|archiver|asterias|search|spyder|hubater|letscape|titan|Mozilla/3.01 (compatible;)", 0},
+  {0, 0, "WinWorm", "^-\n$", 0},	/* erm, why is \n needed? */
+  {0, 1, "Other", ".*", 0},
+  {0, 0, NULL, NULL, 0}
 };
 
 int countcmp(const void *_a, const void *_b)
@@ -55,7 +53,7 @@ main (int argc, char **argv)
 
   gethostname (buf, BUFSIZ);
   printf
-    ("Content-Type: text/html\n\n<HTML><BODY><CENTER>OS Statistics for %s<BR><BR>\n",
+    ("Content-Type: text/html\n\n<HTML><BODY><CENTER><H2>OS Statistics for %s</H2><BR><BR>\n",
      buf);
 
   while (table[i].regex)
@@ -129,7 +127,32 @@ main (int argc, char **argv)
 	      100.0 * (float) table[i].count / (float) total);
       ++i;
     }
-  printf ("</TABLE></CENTER></BODY></HTML>\n");
+  printf ("</TABLE>\n");
+
+#ifndef CLEAN
+	printf("<BR><H2>Mortal Connectors</H2><BR>");
+  i = 0;
+	total = 0;
+	while(table[i].name){
+		if(table[i].mortal)
+			total+=table[i].count;
+		++i;
+	}
+	i=0;
+  printf ("<TABLE CELLSPACING=0 CELLPADDING=0><TR><TH>OS</TH><TH>Count</TH><TH>Percent</TH></TR>\n");
+  while (table[i].name)
+    {
+			if(table[i].mortal)
+      printf ("<TR><TD>%s</TD><TD>%d</TD><TD>(% .2f %%)</TD></TR>\n",
+	      table[i].name, table[i].count,
+	      100.0 * (float) table[i].count / (float) total);
+      ++i;
+    }
+  printf ("</TABLE>\n");
+#endif
+
+
+	printf("</CENTER></BODY></HTML>\n");
 
 	exit (EXIT_SUCCESS);
 }

@@ -1,3 +1,5 @@
+STATE=agent.state
+
 default: agent
 all: agent agent-prof agent-debug
 prof: agent-prof
