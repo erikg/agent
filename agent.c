@@ -1,6 +1,6 @@
 
 /*
- * $Id: agent.c,v 1.14 2003/08/21 15:20:09 erik Exp $
+ * $Id: agent.c,v 1.15 2003/08/21 16:57:45 erik Exp $
  */
 
 #include <stdio.h>
@@ -34,17 +34,17 @@ struct os
 struct os table[] = {
     {0, 1, "BSD", "bsd|fetch", 0},
     {0, 1, "Linux", "linux|konq|gnome", 0},
-    {0, 1, "Unix", "X11|Lynx|sunos|aix|perl|wget|contype", 0},
+    {0, 1, "Unix", "unix|solaris|osix|x11|lynx|sunos|aix|perl|wget|contype", 0},
     {0, 1, "Mac", "mac", 0},
     {0, 1, "PDA", "gulliver", 0},
     {0, 0, "Bot (spider)",
-     "arach|archiver|asterias|bot|crawl|googlebot|griffon|harvest|hubater|indy library|infoseek|inktomi|intelliseek|internetseer|jeeves|larbin|letscape|mailsweeper|marvin|mercator|mozilla/3.01 (compatible;)|offline explorer|pompos|quepasacreep|scooter|search|slurp|spider|spyder|teoma|teleport pro|titan|walker|webreaper|webseek|webstripper|zao|zyborg",
-     0},
-    {0, 0, "WinWorm", "^-\n$", 0},	/* erm, why is \n needed? */
-    {0, 0, "bad guy tool", "Simpsons CGI Scanner", 0},
-    {0, 1, "Windows", "win|msie|frontpage|microsoft|aol|gozilla", 0},
-    {0, 1, "Other", ".*", 0},
-    {0, 0, NULL, NULL, 0}
+     "^mozilla/5\\.0\n$|arach|archiver|asterias|augurfind|bot|crawl|efp@gmx\\.net|googlebot|griffon|harvest|hubater|indy library|infoseek|inktomi|intelliseek|internetseer|jeeves|lachesis|larbin|letscape|mail ?sweeper|marvin|mercator|mozilla/3.0[1]? \\(compatible[;]?\\)|netcraft|offline explorer|pompos|quepasacreep|scooter|search|slurp|spider|spyder|teleport pro|teoma|titan|walker|webreaper|webseek|webstripper|zao|zeus|zyborg",
+	 0},
+	{0, 0, "WinWorm", "^-\n$", 0},	/* erm, why is \n needed? */
+	{0, 0, "bad guy tool", "simpsons cgi scanner", 0},
+	{0, 1, "Windows", "win|msie|frontpage|microsoft|aol|gozilla", 0},
+	{0, 0, "Other", ".*", 0},
+	{0, 0, NULL, NULL, 0}
 };
 
 int
@@ -118,7 +118,7 @@ main (int argc, char **argv)
 		    0)
 		  {
 		      table[i].count++;
-		      if (i == 8 || !strncmp (table[i].name, "Other", 5))
+		      if (!strncmp (table[i].name, "Other", 5))
 			  write (otherlog, buf, strlen (buf));
 		      break;
 		  }
@@ -142,7 +142,7 @@ main (int argc, char **argv)
 
     nixcount = table[0].count + table[1].count + table[2].count;
 
-    qsort (table, 8, sizeof (struct os), countcmp);
+    qsort (table, 9, sizeof (struct os), countcmp);
 
     i = 0;
     printf
