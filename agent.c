@@ -1,6 +1,6 @@
 
 /*
- * $Id: agent.c,v 1.13 2003/08/21 14:58:04 erik Exp $
+ * $Id: agent.c,v 1.14 2003/08/21 15:20:09 erik Exp $
  */
 
 #include <stdio.h>
@@ -38,9 +38,10 @@ struct os table[] = {
     {0, 1, "Mac", "mac", 0},
     {0, 1, "PDA", "gulliver", 0},
     {0, 0, "Bot (spider)",
-     "arach|archiver|asterias|bot|crawl|googlebot|griffon|harvest|hubater|infoseek|inktomi|jeeves|letscape|marvin|mercator|mozilla/3.01 (compatible;)|offline explorer|scooter|search|slurp|spider|spyder|teoma|teleport pro|titan|walker|webreaper|webseek|webstripper|zyborg",
+     "arach|archiver|asterias|bot|crawl|googlebot|griffon|harvest|hubater|indy library|infoseek|inktomi|intelliseek|internetseer|jeeves|larbin|letscape|mailsweeper|marvin|mercator|mozilla/3.01 (compatible;)|offline explorer|pompos|quepasacreep|scooter|search|slurp|spider|spyder|teoma|teleport pro|titan|walker|webreaper|webseek|webstripper|zao|zyborg",
      0},
     {0, 0, "WinWorm", "^-\n$", 0},	/* erm, why is \n needed? */
+    {0, 0, "bad guy tool", "Simpsons CGI Scanner", 0},
     {0, 1, "Windows", "win|msie|frontpage|microsoft|aol|gozilla", 0},
     {0, 1, "Other", ".*", 0},
     {0, 0, NULL, NULL, 0}
