@@ -1,3 +1,5 @@
+# $Id: Makefile,v 1.4 2003/08/21 13:43:06 erik Exp $
+
 STATE=agent.state
 
 all: agent
@@ -7,7 +9,6 @@ install: agent
 	strip agent && cat agent > /usr/lib/cgi-bin/agent
 
 default: agent
-all: agent agent-prof agent-debug
 prof: agent-prof
 debug: agent-debug
 
