@@ -1,5 +1,11 @@
 STATE=agent.state
 
+all: agent
+
+install: agent
+	> /usr/lib/cgi-bin/${STATE}
+	strip agent && cat agent > /usr/lib/cgi-bin/agent
+
 default: agent
 all: agent agent-prof agent-debug
 prof: agent-prof
@@ -16,9 +22,9 @@ agent.o: agent.c
 
 
 agent-prof: agent-prof.o
-	gcc -O3 -pg -mpentium -ffast-math -o agent-prof agent-prof.o
+	gcc -O3 -pg -march=pentium -ffast-math -o agent-prof agent-prof.o
 agent-prof.o: agent.c
-	gcc -O3 -mpentium -pg -o agent-prof.o -c agent.c
+	gcc -O3 -march=pentium -pg -o agent-prof.o -c agent.c
 
 	
 agent-debug: agent-debug.o
