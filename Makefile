@@ -1,4 +1,4 @@
-# $Id: Makefile,v 1.6 2003/10/08 12:57:22 erik Exp $
+# $Id: Makefile,v 1.7 2003/10/08 13:10:04 erik Exp $
 
 STATE=agent.state
 
@@ -12,6 +12,9 @@ install: agent
 default: agent
 prof: agent-prof
 debug: agent-debug
+
+debian:
+	(cd /usr/lib/cgi-bin && ./agent)
 
 x: agent
 	@dd if=/dev/zero of=agent.state count=0
