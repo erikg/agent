@@ -83,7 +83,6 @@ main (int argc, char **argv)
   fd = open (STATE, O_RDWR);
   if (fd != -1)
     {
-	    printf("Looks like we have data\n");
       read (fd, &offset, sizeof (long));
       read (fd, &total, sizeof (long));
       i = 0;
@@ -96,8 +95,6 @@ main (int argc, char **argv)
     }
   else
     fd = open (STATE, O_WRONLY|O_CREAT);
-
-  printf("%d is the offset\n", offset);
 
   fseek (fp, offset, SEEK_SET);
 
