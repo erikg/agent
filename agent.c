@@ -1,8 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <unistd.h>		/* gethostname() */
 #include <sys/types.h>
 #include <regex.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+
 
 #ifdef DEBUG
 #define LOG "agent.log"
@@ -48,9 +52,9 @@ countcmp (const void *_a, const void *_b)
 int
 main (int argc, char **argv)
 {
-  int i = 0, total = 0;
+  int i = 0, total = 0, fd;
   long offset = 0;
-  FILE *fd[2];
+  FILE *fp;
   char buf[BUFSIZ];
   regmatch_t pmatch[1000];
 
@@ -67,31 +71,37 @@ main (int argc, char **argv)
       i++;
     }
 
-  fd[0] = fopen (LOG, "r");
-  if (fd[0] == NULL)
+  fp = fopen (LOG, "r");
+  if (fp == NULL)
     {
       printf ("Unable to open log file (%s)\n", LOG);
       perror ("agent: ");
       return -1;
     }
-  fd[1] = fopen (STATE, "r+");
-  if (fd[1])
+
+  /* perhaps we should stat and do better reporting? */
+  fd = open (STATE, O_RDWR);
+  if (fd != -1)
     {
-      fread (&offset, sizeof (long), 1, fd[1]);
-      fread (&total, sizeof (long), 1, fd[1]);
+	    printf("Looks like we have data\n");
+      read (fd, &offset, sizeof (long));
+      read (fd, &total, sizeof (long));
       i = 0;
       while (table[i].name)
 	{
-	  fread (&table[i].count, sizeof (int), 1, fd[1]);
+	  read (fd, &table[i].count, sizeof (int));
 	  ++i;
 	}
-      fseek (fd[1], 0, SEEK_SET);
+      lseek (fd, 0, SEEK_SET);
     }
   else
-    fd[1] = fopen (STATE, "w");
-  fseek (fd[0], offset, SEEK_SET);
+    fd = open (STATE, O_WRONLY|O_CREAT);
 
-  while (fgets (buf, 1024, fd[0]))
+  printf("%d is the offset\n", offset);
+
+  fseek (fp, offset, SEEK_SET);
+
+  while (fgets (buf, 1024, fp))
     {
       i = 0;
       while (table[i].regex)
@@ -105,17 +115,17 @@ main (int argc, char **argv)
 	}
       ++total;
     }
-  offset = ftell (fd[0]);
-  fclose (fd[0]);
-  fwrite (&offset, sizeof (long), 1, fd[1]);
-  fwrite (&total, sizeof (int), 1, fd[1]);
+  offset = ftell (fp);
+  fclose (fp);
+  write (fd, &offset, sizeof (long));
+  write (fd, &total, sizeof (int));
   i = 0;
   while (table[i].name)
     {
-      fwrite (&table[i].count, sizeof (int), 1, fd[1]);
+      write (fd, &table[i].count, sizeof (int));
       ++i;
     }
-  fclose (fd[1]);
+  close (fd);
 
 /*  table[3].count = table[0].count + table[1].count + table[2].count;*/
 
