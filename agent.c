@@ -1,6 +1,6 @@
 
 /*
- * $Id: agent.c,v 1.15 2003/08/21 16:57:45 erik Exp $
+ * $Id: agent.c,v 1.16 2003/08/21 17:30:40 erik Exp $
  */
 
 #include <stdio.h>
@@ -33,15 +33,15 @@ struct os
 
 struct os table[] = {
     {0, 1, "BSD", "bsd|fetch", 0},
-    {0, 1, "Linux", "linux|konq|gnome", 0},
-    {0, 1, "Unix", "unix|solaris|osix|x11|lynx|sunos|aix|perl|wget|contype", 0},
-    {0, 1, "Mac", "mac", 0},
+    {0, 1, "Linux", "gnome|konq|linux|webdownloader", 0},
+    {0, 1, "Unix", "aix|contype|java|lwp::|lynx|osix|perl|solaris|sunos|unix|wget|x11", 0},
+    {0, 1, "Mac", "mac|apple", 0},
     {0, 1, "PDA", "gulliver", 0},
     {0, 0, "Bot (spider)",
-     "^mozilla/5\\.0\n$|arach|archiver|asterias|augurfind|bot|crawl|efp@gmx\\.net|googlebot|griffon|harvest|hubater|indy library|infoseek|inktomi|intelliseek|internetseer|jeeves|lachesis|larbin|letscape|mail ?sweeper|marvin|mercator|mozilla/3.0[1]? \\(compatible[;]?\\)|netcraft|offline explorer|pompos|quepasacreep|scooter|search|slurp|spider|spyder|teleport pro|teoma|titan|walker|webreaper|webseek|webstripper|zao|zeus|zyborg",
+     "aport|appie|arach|archiver|assort|asterias|augurfind|bot|bumblebee|crawl|docomo|efp@gmx\\.net|googlebot|griffon|harvest|hubater|indy library|infoseek|inktomi|intelliseek|internetseer|jack\n$|jeeves|lachesis|larbin|letscape|mail ?sweeper|marvin|mercator|moget|mozilla/3.0[1]? \\(compatible[;]?\\)|mozilla/5\\.0\n$|muscat|netcraft|offline explorer|pita|pompos|quepasacreep|scooter|search|slurp|spider|spyder|teleport pro|teoma|titan|validator|walker|webcollage|webcopier|webfountain|webreaper|webseek|webstripper|wfarc|zao|zeus|zyborg",
 	 0},
 	{0, 0, "WinWorm", "^-\n$", 0},	/* erm, why is \n needed? */
-	{0, 0, "bad guy tool", "simpsons cgi scanner", 0},
+	{0, 0, "bad guy tool", "simpsons cgi scanner|bordermanager", 0},
 	{0, 1, "Windows", "win|msie|frontpage|microsoft|aol|gozilla", 0},
 	{0, 0, "Other", ".*", 0},
 	{0, 0, NULL, NULL, 0}
