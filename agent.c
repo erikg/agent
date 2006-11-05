@@ -1,6 +1,6 @@
 
 /*
- * $Id: agent.c,v 1.20 2003/10/08 12:54:18 erik Exp $
+ * $Id: agent.c,v 1.21 2006/11/05 18:34:55 erik Exp $
  */
 
 #include <stdio.h>
@@ -14,16 +14,18 @@
 #include <fcntl.h>
 
 
-#ifdef DEBUG
-#define LOG "agent.log"
-#else
-#define LOG "/var/log/apache/agent.log"
+#ifndef LOG
+# ifdef DEBUG
+#  define LOG "agent.log"
+# else
+#  define LOG "/var/log/apache/agent.log"
+# endif
 #endif
 
 #define STATE "agent.state"
 
 const char rcsid[] = 
- "$Id: agent.c,v 1.20 2003/10/08 12:54:18 erik Exp $";
+ "$Id: agent.c,v 1.21 2006/11/05 18:34:55 erik Exp $";
 
 struct os
 {
@@ -43,8 +45,8 @@ struct os table[] = {
      0},
     {0, 1, "PDA", "gulliver|jBrowser", 0},
     {0, 0, "Bot (spider)",
-     "aport|appie|arach|archiver|assort|asterias|augurfind|bot|bumblebee|crawl|docomo|efp@gmx\\.net|googlebot|griffon|harvest|hubater|indy library|infoseek|inktomi|intelliseek|internetseer|jack\n$|jeeves|lachesis|larbin|letscape|mail ?sweeper|marvin|mercator|moget|mozilla/3.0[1]? \\(compatible[;]?\\)|mozilla/5\\.0\n$|muscat|netcraft|ng/1.0|offline explorer|php|pita|pompos|quepasacreep|scooter|search|slurp|spider|spyder|teleport pro|teoma|titan|validator|walker|webcollage|webcopier|webfountain|webreaper|webseek|webstripper|wfarc|zao|zeus|zyborg",
-     0},
+#include "bots.regex"
+     ,0},
     {0, 0, "WinWorm", "^-\n$", 0},	/* erm, why is \n needed? */
     {0, 0, "bad guy tool", "simpsons cgi scanner|bordermanager", 0},
     {0, 1, "Windows", "win|msie|frontpage|microsoft|aol|gozilla", 0},
