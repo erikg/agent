@@ -1,13 +1,22 @@
-# $Id: Makefile,v 1.7 2003/10/08 13:10:04 erik Exp $
+# $Id: Makefile,v 1.8 2006/11/05 18:35:04 erik Exp $
+
+CFLAGS=-D__USE_BSD -Wall -ansi -pedantic
+CFLAGS_R=$(CFLAGS) -O2
+CFLAGS_P=$(CFLAGS) -O0 -pg -ggdb
+CFLAGS_D=$(CFLAGS) -O0 -ggdb -DDEBUG
+CFLAGS_O=$(CFLAGS) -O3 -march=pentium -mcpu=pentium -ffast-math
+
+SRC=agent.c bots.regex
 
 STATE=agent.state
 
-all: agent
+all: agent debot.sh
 
-install: agent
+install: agent debot.sh
+	install -m 555 debot.sh $(HOME)/bin/debot.sh
+	strip agent && cat agent > /usr/lib/cgi-bin/agent
 	> /usr/lib/cgi-bin/${STATE}
 	> /tmp/agent.unknown
-	strip agent && cat agent > /usr/lib/cgi-bin/agent
 
 default: agent
 prof: agent-prof
@@ -21,21 +30,28 @@ x: agent
 	@./agent
 
 agent: agent.o
-	gcc -O2 -o agent agent.o
-agent.o: agent.c
-	gcc -D__USE_BSD -O2 -c agent.c -Wall -W
+	$(CC) $(CFLAGS_R)  -o agent agent.o
+agent.o: $(SRC) bots.regex
+	$(CC) $(CFLAGS_R) -c $<
 
 
 agent-prof: agent-prof.o
-	gcc -O3 -pg -march=pentium -ffast-math -o agent-prof agent-prof.o
-agent-prof.o: agent.c
-	gcc -O3 -march=pentium -pg -o agent-prof.o -c agent.c
+	$(CC) $(CFLAGS_P) -o agent-prof agent-prof.o
+agent-prof.o: $(SRC)
+	$(CC) $(CFLAGS_P) -o agent-prof.o -c $(SRC)
 
 	
 agent-debug: agent-debug.o
-	gcc -O0 -ggdb -o agent-debug agent-debug.o
-agent-debug.o: agent.c
-	gcc -O0 -DDEBUG -ggdb -o agent-debug.o -c agent.c
+	$(CC) $(CFLAGS_D) -o agent-debug agent-debug.o
+agent-debug.o: $(SRC)
+	$(CC) $(CFLAGS_D) -o agent-debug.o -c $(SRC)
+
+debot.sh: bots.regex
+	echo "#!/bin/sh" > $@
+	echo "grep -vi `sed 's/|/\\\\|/g' bots.regex`" >> $@
+
+bots.regex: bots
+	cat $< | xargs | sed -e 's/ /|/g' -e 's/.*/"&"/' > $@
 
 clean:
-	rm -f agent agent.o agent-prof.o agent-prof agent-debug.o agent-debug *.core
+	rm -f agent agent.o agent-prof.o agent-prof agent-debug.o agent-debug *.core bots.regex debot.sh
