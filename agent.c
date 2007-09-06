@@ -1,6 +1,6 @@
 
 /*
- * $Id: agent.c,v 1.21 2006/11/05 18:34:55 erik Exp $
+ * $Id: agent.c,v 1.22 2007/09/06 14:01:43 erik Exp $
  */
 
 #include <stdio.h>
@@ -18,14 +18,14 @@
 # ifdef DEBUG
 #  define LOG "agent.log"
 # else
-#  define LOG "/var/log/apache/agent.log"
+#  define LOG "/var/log/apache2/agent.log"
 # endif
 #endif
 
 #define STATE "agent.state"
 
 const char rcsid[] = 
- "$Id: agent.c,v 1.21 2006/11/05 18:34:55 erik Exp $";
+ "$Id: agent.c,v 1.22 2007/09/06 14:01:43 erik Exp $";
 
 struct os
 {
