@@ -1,6 +1,6 @@
-# $Id: Makefile,v 1.8 2006/11/05 18:35:04 erik Exp $
+# $Id: Makefile,v 1.9 2008/01/04 20:18:52 erik Exp $
 
-CFLAGS=-D__USE_BSD -Wall -ansi -pedantic
+CFLAGS=-D__USE_BSD -W -Wall -ansi -pedantic
 CFLAGS_R=$(CFLAGS) -O2
 CFLAGS_P=$(CFLAGS) -O0 -pg -ggdb
 CFLAGS_D=$(CFLAGS) -O0 -ggdb -DDEBUG
@@ -51,7 +51,7 @@ debot.sh: bots.regex
 	echo "grep -vi `sed 's/|/\\\\|/g' bots.regex`" >> $@
 
 bots.regex: bots
-	cat $< | xargs | sed -e 's/ /|/g' -e 's/.*/"&"/' > $@
+	cat bots | xargs | sed -e 's/ /|/g' -e 's/.*/"&"/' > $@
 
 clean:
 	rm -f agent agent.o agent-prof.o agent-prof agent-debug.o agent-debug *.core bots.regex debot.sh
