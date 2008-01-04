@@ -1,6 +1,6 @@
 
 /*
- * $Id: agent.c,v 1.22 2007/09/06 14:01:43 erik Exp $
+ * $Id: agent.c,v 1.23 2008/01/04 20:18:43 erik Exp $
  */
 
 #include <stdio.h>
@@ -25,7 +25,7 @@
 #define STATE "agent.state"
 
 const char rcsid[] = 
- "$Id: agent.c,v 1.22 2007/09/06 14:01:43 erik Exp $";
+ "$Id: agent.c,v 1.23 2008/01/04 20:18:43 erik Exp $";
 
 struct os
 {
@@ -70,7 +70,7 @@ main (int argc, char **argv)
     int i = 0, total = 0, nixcount = 0, statefile, otherlog;
     unsigned long offset = 0;
     FILE *logfile;
-    char buf[BUFSIZ];
+    char buf[BUFSIZ], *logname;
     regmatch_t pmatch[1000];
 
     gethostname (buf, BUFSIZ);
@@ -86,10 +86,12 @@ main (int argc, char **argv)
 	  i++;
       }
 
-    logfile = fopen (LOG, "r");
+    logname = argc == 2 ? argv[1] : LOG;
+
+    logfile = fopen (logname, "r");
     if (logfile == NULL)
       {
-	  printf ("Unable to open log file (%s)\n", LOG);
+	  printf ("Unable to open log file (%s)\n", logname);
 	  perror ("agent: ");
 	  return -1;
       }
