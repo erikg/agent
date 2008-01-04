@@ -1,12 +1,13 @@
 
 /*
- * $Id: agent.c,v 1.23 2008/01/04 20:18:43 erik Exp $
+ * $Id: agent.c,v 1.24 2008/01/04 20:19:55 erik Exp $
  */
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <unistd.h>		/* gethostname() */
+#include <unistd.h>	/* gethostname() */
+#include <netdb.h>	/* gethostname() on linux... */
 #include <sys/types.h>
 #include <regex.h>
 #include <sys/stat.h>
@@ -25,7 +26,7 @@
 #define STATE "agent.state"
 
 const char rcsid[] = 
- "$Id: agent.c,v 1.23 2008/01/04 20:18:43 erik Exp $";
+ "$Id: agent.c,v 1.24 2008/01/04 20:19:55 erik Exp $";
 
 struct os
 {
